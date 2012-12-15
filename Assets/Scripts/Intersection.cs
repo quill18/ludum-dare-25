@@ -5,7 +5,7 @@ public class Intersection : MonoBehaviour {
 	
 	public Transform[] connections;
 	public bool locked = false;
-	int tankLimit = 2;
+	int tankLimit = 4;
 	static int tankCount = 0;
 	public GameObject tankPrefab;
 	
@@ -55,7 +55,8 @@ public class Intersection : MonoBehaviour {
 		locked = true;
 	}
 	
-	public static void TankDied() {
+	public void TankDied() {
+		locked = false;
 		tankCount--;
 	}
 }

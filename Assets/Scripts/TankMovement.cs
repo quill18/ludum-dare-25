@@ -8,13 +8,17 @@ public class TankMovement : MonoBehaviour {
 	float speed = 10f;
 	float gravity = -50f;
 	float minRange = 1f;
+	bool enabledTurret = false;
 
 	// Use this for initialization
 	void Start () {
 	}
 	
 	void OnDestroy() {
-		Intersection.TankDied();
+		if(toIntersection != null) {
+			Intersection intersection = toIntersection.GetComponent<Intersection>();
+			intersection.TankDied();
+		}
 	}
 	
 	// Update is called once per frame
@@ -22,9 +26,7 @@ public class TankMovement : MonoBehaviour {
 		Vector3 dirToTarget = toIntersection.position - transform.position;
 		dirToTarget.y = 0;
 
-		if(dirToTarget.magnitude < minRange) {
-			FindNewIntersection();
-		} else if(transform.position.y > 0) {
+		if(transform.position.y > 0) {
 			transform.Translate( Vector3.up * gravity * Time.deltaTime );
 			if (transform.position.y < 0) {
 				Vector3 pos = transform.position;
@@ -32,15 +34,24 @@ public class TankMovement : MonoBehaviour {
 				transform.position = pos;
 			}
 		} else {
-			Quaternion targetRotation = Quaternion.LookRotation(dirToTarget);
-			float angle = Quaternion.Angle(transform.rotation, targetRotation);
-			
-			if(angle > 0) {
-				transform.rotation = Quaternion.RotateTowards( transform.rotation, targetRotation, turnRate * Time.deltaTime);
+			if(!enabledTurret) {
+				transform.Find("Turret").GetComponent<TankTurret>().enabled = true;
+				enabledTurret = true;
 			}
-			else {
-				transform.Translate( Vector3.forward * speed * Time.deltaTime );
+			
+			if(dirToTarget.magnitude < minRange) {
+				FindNewIntersection();
+			} else {
+				Quaternion targetRotation = Quaternion.LookRotation(dirToTarget);
+				float angle = Quaternion.Angle(transform.rotation, targetRotation);
 				
+				if(angle > 0) {
+					transform.rotation = Quaternion.RotateTowards( transform.rotation, targetRotation, turnRate * Time.deltaTime);
+				}
+				else {
+					transform.Translate( Vector3.forward * speed * Time.deltaTime );
+					
+				}
 			}
 		}
 	}
