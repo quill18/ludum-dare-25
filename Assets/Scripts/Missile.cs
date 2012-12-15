@@ -12,21 +12,34 @@ public class Missile : MonoBehaviour {
 	float explosionRadius = 4f;
 	float explosionStrength = 1000f;
 	float damageToPlayer = 20f;
+	Vector3 randomSpin;
 	
 	// Use this for initialization
 	void Start () {
 		playerTransform = GameObject.Find("Player").transform;
+		randomSpin = Random.onUnitSphere;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		lifeSpan -= Time.deltaTime;
-		if(lifeSpan <= 0) {
-			Explode();
+		if(Time.timeScale == 0) {
+			return;
 		}
 		
-		Quaternion targetRotation = Quaternion.LookRotation( playerTransform.position + new Vector3(0, .75f, 0) - transform.position );
-		transform.rotation = Quaternion.RotateTowards( transform.rotation, targetRotation, turnRate * Time.deltaTime);
+		if(collider.bounds.min.y < 0) {
+			Explode();
+			return;
+		}
+		
+		lifeSpan -= Time.deltaTime;
+		if(lifeSpan <= -2) {
+			Explode();
+		} else if(lifeSpan <= 0) {
+			transform.Rotate(randomSpin * turnRate * Time.deltaTime * 10);
+		} else {		
+			Quaternion targetRotation = Quaternion.LookRotation( playerTransform.position + new Vector3(0, .75f, 0) - transform.position );
+			transform.rotation = Quaternion.RotateTowards( transform.rotation, targetRotation, turnRate * Time.deltaTime);
+		}
 		
 		transform.Translate( Vector3.forward * speed * Time.deltaTime );
 		
@@ -36,6 +49,13 @@ public class Missile : MonoBehaviour {
 	}
 	
 	void OnCollisionEnter( Collision collision ) {
+		Destroyable dest = collision.collider.GetComponent<Destroyable>();
+		if(dest != null) {
+			dest.DestroyMe();
+		}
+			
+
+		
 		Explode();
 	}
 	
@@ -56,11 +76,6 @@ public class Missile : MonoBehaviour {
 		// Check for destroyable objects inside our explosion radius
 		Collider[] colliders = Physics.OverlapSphere( collider.bounds.center, explosionRadius );
 		foreach( Collider col in colliders ) {
-			Destroyable dest = col.GetComponent<Destroyable>();
-			if(dest != null) {
-				dest.DestroyMe();
-			}
-			
 			Health health = col.GetComponent<Health>();
 			if(health != null) {
 				float falloff = 1f - (col.bounds.center - collider.bounds.center).sqrMagnitude / (explosionRadius*explosionRadius);

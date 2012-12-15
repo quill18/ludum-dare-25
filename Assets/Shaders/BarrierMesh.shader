@@ -1,12 +1,10 @@
-// Upgrade NOTE: replaced 'PositionFog()' with multiply of UNITY_MATRIX_MVP by position
-// Upgrade NOTE: replaced 'V2F_POS_FOG' with 'float4 pos : SV_POSITION'
-// Upgrade NOTE: replaced 'glstate.matrix.modelview[0]' with 'UNITY_MATRIX_MV'
+// Based on example found on Unity Wiki
 
-Shader "Particles/Alpha Blended Clipsafe" {
+Shader "Quill18/Alpha Blended Falloff" {
 	Properties {
 		_TintColor ("Tint Color", Color) = (0.5,0.5,0.5,0.5)
-		_MainTex ("Particle Texture", 2D) = "white" {}
-		_FadeDistance ("Fade Start Distance", float) = 0.5
+		_MainTex ("Texture", 2D) = "white" {}
+		_FadeDistance ("Fade Start Distance", float) = 10
 	}
 
 	SubShader {
@@ -19,8 +17,7 @@ Shader "Particles/Alpha Blended Clipsafe" {
 		Fog { Color (0,0,0,0) }
 		Pass {
 			CGPROGRAM
-// Upgrade NOTE: excluded shader from DX11 and Xbox360; has structs without semantics (struct v2f members uv,color)
-#pragma exclude_renderers d3d11 xbox360
+				#pragma exclude_renderers d3d11 xbox360
 				#pragma vertex vert
 				#pragma fragment frag
 				#pragma multi_compile_builtin
@@ -53,7 +50,7 @@ Shader "Particles/Alpha Blended Clipsafe" {
 					float4 viewPos = mul(UNITY_MATRIX_MV, v.vertex);
 					float alpha = (-viewPos.z - _ProjectionParams.y)/_FadeDistance;
 					alpha = min(alpha, 1);
-					alpha = 1 - alpha;
+					alpha = 1 - alpha;	// Inverse falloff
 					o.color = float4(v.color.rgb, v.color.a*alpha);
 					o.color *= _TintColor*2;
 					return o;

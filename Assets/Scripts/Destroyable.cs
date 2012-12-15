@@ -41,14 +41,13 @@ public class Destroyable : MonoBehaviour {
 		
 		isDestroyed = true;
 		
-		if(debris != null && DebrisTracker.SafeToCreate()) {
+		if(debris != null) {
 			Instantiate(debris, transform.position, transform.rotation);
 		}
 		
 		Destroy(gameObject);
 		
 		if(countsTowardsScore) {
-			Debug.Log ("Scoring: " + gameObject.name);
 			CityHealth.LoseHealth();
 		}
 	}
