@@ -37,6 +37,13 @@ public class TankMovement : MonoBehaviour {
 			if(!enabledTurret) {
 				transform.Find("Turret").GetComponent<TankTurret>().enabled = true;
 				enabledTurret = true;
+				
+				GameObject para = transform.Find("parachute").gameObject;//.parent = null;
+				para.transform.parent = null;
+				SelfDestruct dest = para.AddComponent<SelfDestruct>();
+				dest.afterLife = 5;
+				dest.timer = 0;
+				dest.disappearSpeed = 5;
 			}
 			
 			if(dirToTarget.magnitude < minRange) {

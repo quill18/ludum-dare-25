@@ -55,7 +55,9 @@ public class CityHealth : MonoBehaviour {
 		if(currHealth <=0) {
 			// TODO: Win animation?
 			
-			Application.LoadLevel("gameOver-Win");
+			PlayerPrefs.SetInt("Victory", 1);
+			
+			Application.LoadLevel("gameOver");
 		}
 	}
 }

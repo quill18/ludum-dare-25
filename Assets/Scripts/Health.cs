@@ -7,6 +7,9 @@ public class Health : MonoBehaviour {
 	GUITexture texHealth;
 	float trueHealthBarWidth;
 	
+	public AudioClip hurtClip;
+	public AudioClip healClip;
+	
 	// Use this for initialization
 	void Start () {
 		texHealth = GameObject.Find ("guiPlayerHealthBar").GetComponent<GUITexture>();
@@ -23,16 +26,19 @@ public class Health : MonoBehaviour {
 	public void TakeDamage(float amt) {
 		health -= amt;
 		DamageFlash.Flash();
+		AudioSource.PlayClipAtPoint(hurtClip, transform.position);
 		
 		if(health <=0) {
 			// TODO: Death animation?
 			
-			Application.LoadLevel("gameOver-Lose");
+			PlayerPrefs.SetInt("Victory", 0);
+			Application.LoadLevel("gameOver");
 		}
 	}
 	
 	public void Heal() {
 		health += 25;
 		health = Mathf.Min (health, 100f);
+		AudioSource.PlayClipAtPoint(healClip, transform.position);
 	}
 }

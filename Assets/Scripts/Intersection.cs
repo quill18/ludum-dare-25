@@ -9,9 +9,11 @@ public class Intersection : MonoBehaviour {
 	static int tankCount = 0;
 	public GameObject tankPrefab;
 	
+	public static bool spawningEnabled;
+	
 	// Use this for initialization
 	void Start () {
-	
+		spawningEnabled = false;
 	}
 	
 	void OnDestroy() {
@@ -51,7 +53,11 @@ public class Intersection : MonoBehaviour {
 			return;
 		}
 		
-		Vector3 pos = transform.position + Vector3.up * 100f;
+		if(!spawningEnabled) {
+			return;
+		}
+		
+		Vector3 pos = transform.position + Vector3.up * 200f;
 		GameObject go = (GameObject)Instantiate(tankPrefab, pos, Quaternion.identity);
 		tankCount++;
 		TankMovement tank = go.GetComponent<TankMovement>();

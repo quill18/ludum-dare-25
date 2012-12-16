@@ -9,6 +9,8 @@ public class OptionsGUI : MonoBehaviour {
 	float mouseSensitivityX;
 	float mouseSensitivityY;
 	
+	bool oneFrame = false;
+	
 	void Start() {
 		DebrisTracker.QUEUE_LIMIT = PlayerPrefs.GetInt("Debris Limit", 5);
 		setSound(PlayerPrefs.GetInt("soundEnabled", 1) == 1);
@@ -17,6 +19,7 @@ public class OptionsGUI : MonoBehaviour {
 			PlayerPrefs.GetFloat("mouseSensitivityX", 15),
 			PlayerPrefs.GetFloat("mouseSensitivityY", 10)
 			);
+		
 	}
 	
 	void OnDestroy() {
@@ -29,6 +32,7 @@ public class OptionsGUI : MonoBehaviour {
 	
 	void setSound(bool v) {
 		soundEnabled = v;
+		AudioListener.volume = soundEnabled ? 1 : 0;
 	}
 	
 	void setMusic(bool v) {
@@ -43,6 +47,15 @@ public class OptionsGUI : MonoBehaviour {
 	}
 	
 	void Update() {
+		if(oneFrame) {
+			if( PlayerPrefs.GetInt("FirstGame", 1) == 1 ) {
+				Pause();
+			}
+			PlayerPrefs.SetInt("FirstGame", 0);
+		}
+		
+		oneFrame = true;
+		
 		if(Input.GetKeyDown(KeyCode.Escape)) {
 			if(paused) {
 				Unpause();
@@ -74,13 +87,20 @@ public class OptionsGUI : MonoBehaviour {
 			return;
 		}
 		
-		int height = 400;
+		int height = 600;
 		int width = 300;
 		Rect rect = new Rect( Screen.width/2 - width/2, Screen.height/2 - height/2, width, height);
 		
 		//GUI.Box(rect, "");
 		
-		GUILayout.BeginArea( rect );
+		//GUILayout.BeginArea( rect );
+		GUILayout.BeginArea( new Rect(0, 0, Screen.width, Screen.height) );
+		
+		GUILayout.BeginHorizontal();
+		GUILayout.FlexibleSpace();
+		
+		GUILayout.BeginVertical();
+		GUILayout.FlexibleSpace();
 		GUILayout.BeginVertical(GUI.skin.box);
 		
 			GUILayout.Label("Options");
@@ -109,9 +129,9 @@ public class OptionsGUI : MonoBehaviour {
 				setSound(!soundEnabled);
 			}
 		
-			if(GUILayout.Button("Music is: " + (musicEnabled ? "On" : "Off"))) {
+			/*if(GUILayout.Button("Music is: " + (musicEnabled ? "On" : "Off"))) {
 				setMusic(!musicEnabled);
-			}
+			}*/
 		
 			GUILayout.Space(10);
 
@@ -152,6 +172,25 @@ public class OptionsGUI : MonoBehaviour {
 				Unpause();
 			}
 		GUILayout.EndVertical();
+			GUILayout.Space(25);
+		GUILayout.BeginVertical(GUI.skin.box);
+			GUILayout.Label("How To Play");
+			GUILayout.Label("Arrows or WASD to Move.");
+			GUILayout.Label("Mouse to Turn");
+			GUILayout.Label("Left Mouse Button or CTRL to Fire");
+			GUILayout.Label("Space to Jump");
+			GUILayout.Space(25);
+			GUILayout.Label("Destroy all buildings to win!");
+			GUILayout.Label("Tanks can be destroyed for health pickups!");
+		
+		GUILayout.EndVertical();
+		GUILayout.FlexibleSpace();
+		GUILayout.EndVertical();
+		//GUILayout.EndArea();
+		
+		GUILayout.FlexibleSpace();
+		GUILayout.EndHorizontal();
+		
 		GUILayout.EndArea();
 	}
 }

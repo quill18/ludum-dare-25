@@ -67,7 +67,7 @@ public class Missile : MonoBehaviour {
 		}
 	}
 	
-	void Explode() {
+	public void Explode() {
 		// Ka-Blooey!
 		if(explosionPrefab != null) {
 			Instantiate(explosionPrefab, collider.bounds.center, Quaternion.identity);

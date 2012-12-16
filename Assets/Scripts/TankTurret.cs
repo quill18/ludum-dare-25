@@ -8,7 +8,7 @@ public class TankTurret : MonoBehaviour {
 	float cooldownRemaining = 0;
 	public GameObject missile;
 	float turnRate = 360;
-
+	
 	// Use this for initialization
 	void Start () {
 		enabled = false;
@@ -53,5 +53,9 @@ public class TankTurret : MonoBehaviour {
 	void Fire() {
 		Transform firePoint = transform.Find("FirePoint");
 		Instantiate(missile, firePoint.position, firePoint.rotation);
+		
+		if(audio) {
+			audio.Play();
+		}
 	}
 }

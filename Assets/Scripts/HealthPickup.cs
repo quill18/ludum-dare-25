@@ -14,7 +14,6 @@ public class HealthPickup : MonoBehaviour {
 	}
 	
 	void OnTriggerEnter(Collider other) {
-		Debug.Log ("Trigger!");
 		Health h = other.GetComponent<Health>();
 		if(h) {
 			h.Heal();

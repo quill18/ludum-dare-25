@@ -9,6 +9,12 @@ public class Destroyable : MonoBehaviour {
 	public static int numDestroyables;
 	bool isDestroyed = false;
 	
+	public AudioClip deathSound;
+	
+	public AudioClip deployTanksClip;
+	
+	public int pointValue = 100;
+	
 	// Use this for initialization
 	void Start () {
 		if(countsTowardsScore) {
@@ -39,6 +45,13 @@ public class Destroyable : MonoBehaviour {
 			return;
 		}
 		
+		if(Intersection.spawningEnabled == false) {
+			Intersection.spawningEnabled = true;
+			if(deployTanksClip) {
+				AudioSource.PlayClipAtPoint(deployTanksClip, transform.position);
+			}
+		}
+		
 		isDestroyed = true;
 		
 		foreach(GameObject d in debris) {
@@ -47,8 +60,15 @@ public class Destroyable : MonoBehaviour {
 		
 		Destroy(gameObject);
 		
-		if(countsTowardsScore) {
+		if(countsTowardsScore) {	// Misnamed: This is "counts towards victory"
 			CityHealth.LoseHealth();
 		}
+		
+		Score.AddPoints( pointValue );
+		
+		if(deathSound) {
+			AudioSource.PlayClipAtPoint(deathSound, transform.position);
+		}
+		
 	}
 }

@@ -34,6 +34,22 @@ public class SelfDestruct : MonoBehaviour {
 			}
 			
 			transform.Translate( -Vector3.up * disappearSpeed * Time.deltaTime, Space.World );
+			
+			Color c;
+			if(renderer) {
+				c = renderer.material.color;
+				c.a = (afterLife+timer)/afterLife;
+				renderer.material.color = c;
+			}
+			
+			Renderer[] rs = transform.GetComponentsInChildren<Renderer>();
+			foreach(Renderer r in rs) {
+				if (r.material.HasProperty("_Color")) {
+					c = r.material.color;
+					c.a = (afterLife+timer)/afterLife;
+					r.material.color = c;
+				}
+			}
 		}
 
 	}
