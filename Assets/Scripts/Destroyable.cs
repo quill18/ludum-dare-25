@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Destroyable : MonoBehaviour {
 	
-	public GameObject debris;
+	public GameObject[] debris;
 	float impactForceLimit = 2f;
 	public bool countsTowardsScore = true;
 	public static int numDestroyables;
@@ -41,8 +41,8 @@ public class Destroyable : MonoBehaviour {
 		
 		isDestroyed = true;
 		
-		if(debris != null) {
-			Instantiate(debris, transform.position, transform.rotation);
+		foreach(GameObject d in debris) {
+			Instantiate(d, transform.position, transform.rotation);
 		}
 		
 		Destroy(gameObject);

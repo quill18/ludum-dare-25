@@ -52,5 +52,10 @@ public class CityHealth : MonoBehaviour {
 	
 	static public void LoseHealth() {
 		currHealth -= 1;
+		if(currHealth <=0) {
+			// TODO: Win animation?
+			
+			Application.LoadLevel("gameOver-Win");
+		}
 	}
 }

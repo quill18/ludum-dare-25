@@ -14,6 +14,10 @@ public class Intersection : MonoBehaviour {
 	
 	}
 	
+	void OnDestroy() {
+		tankCount = 0;
+	}
+	
 	// Update is called once per frame
 	void Update () {
 		if(tankCount < tankLimit && Random.Range(0, 10) == 0) {

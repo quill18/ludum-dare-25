@@ -22,7 +22,7 @@ public class Missile : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Time.timeScale == 0) {
+		if(Time.deltaTime == 0) {
 			return;
 		}
 		
@@ -36,7 +36,7 @@ public class Missile : MonoBehaviour {
 			Explode();
 		} else if(lifeSpan <= 0) {
 			transform.Rotate(randomSpin * turnRate * Time.deltaTime * 10);
-		} else {		
+		} else if(playerTransform != null) {
 			Quaternion targetRotation = Quaternion.LookRotation( playerTransform.position + new Vector3(0, .75f, 0) - transform.position );
 			transform.rotation = Quaternion.RotateTowards( transform.rotation, targetRotation, turnRate * Time.deltaTime);
 		}

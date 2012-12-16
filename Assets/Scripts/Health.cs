@@ -22,5 +22,17 @@ public class Health : MonoBehaviour {
 	
 	public void TakeDamage(float amt) {
 		health -= amt;
+		DamageFlash.Flash();
+		
+		if(health <=0) {
+			// TODO: Death animation?
+			
+			Application.LoadLevel("gameOver-Lose");
+		}
+	}
+	
+	public void Heal() {
+		health += 25;
+		health = Mathf.Min (health, 100f);
 	}
 }

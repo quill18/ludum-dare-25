@@ -2,7 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class StretchGUITexture : MonoBehaviour {
-
+	
+	public bool distort = false;
+	
 	// Use this for initialization
 	void Start () {
 		GUITexture t = GetComponent<GUITexture>();
@@ -11,7 +13,12 @@ public class StretchGUITexture : MonoBehaviour {
 		float aspect = r.height/ r.width;
 		
 		r.height = Screen.height;
-		r.width = Screen.height / aspect;
+		
+		if(distort) {
+			r.width = Screen.width;
+		} else {
+			r.width = Screen.height / aspect;
+		}
 		
 		r.x = -r.width;
 		//r.y = r.height;
